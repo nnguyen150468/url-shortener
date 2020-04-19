@@ -1,0 +1,36 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+
+
+{{#if error}}
+    <h2>{{error}}</h2>
+{{/if}}
+
+    <form action="/shortURL" method="post" class="form-inline my-4">
+        <label for="fullURL" class="sr-only">URL</label>
+        <input type="url" name="fullURL" id="fullURL" class="mr-2 form-control col"/>
+        <button type="submit" class="btn btn-primary">Shrink</button>
+    </form>
+
+    <table class="table table-striped table-responsive">
+        <thead>
+            <tr>
+                <th>Full URL</th>
+                <th>Short URL</th>
+                <th>Clicks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#if URLs}}
+                {{#each URLs}}
+            <tr>
+                <td><a href="{{full}}">{{full}}</a></td>
+                <td><a href="/{{short}}">{{short}}</a></td>
+                <td>{{clicks}}</td>
+            </tr>
+            {{/each}}
+                {{/if}}
+        </tbody>
+    </table>
+
+
