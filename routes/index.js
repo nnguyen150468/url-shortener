@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 router.post('/shortURL', async (req, res) => {
   let data = loadData();
   
-  //check for duplicates. If duplicate, unshift it to the top
+  //check for duplicates. If duplicate, move it to the top
   const urlIndex = data.findIndex(item => item.full === req.body.fullURL)
   console.log('urlIndex',urlIndex)
   if(urlIndex!==-1){
