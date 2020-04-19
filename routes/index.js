@@ -10,11 +10,18 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/shortURL', async (req, res) => {
-  const data = loadData();
+  let data = loadData();
   
-  //check for duplicates
-  if(data.some(item => item.full === req.body.fullURL)){
-    return res.render('index', { title: 'URL Shrinker',error: "We already have a shortened URL for that link", URLs: data})
+  //check for duplicates. If duplicate, unshift it to the top
+  const urlIndex = data.findIndex(item => item.full === req.body.fullURL)
+  console.log('urlIndex',urlIndex)
+  if(urlIndex!==-1){
+    let sameURL = data.splice(urlIndex,1)
+    console.log('sameURL', sameURL)
+    data = await sameURL.concat(data)
+    console.log('new data',data)
+    saveData(data)
+    return res.render('index', { title:"URL Shrinker", URLs: data })
   }
 
   //generate short link
@@ -35,12 +42,12 @@ router.get('/shortURL', (req, res) => {
   res.render('index', { title: 'URL Shrinker', URLs: data });
 })
 
-router.get('/:shortURL', (req, res) => {
+router.get('/:shortURL', async (req, res) => {
   const data = loadData()
   let fullURL = data.find(item => item.short === req.params.shortURL)
   //increase clicks and update data
   fullURL.clicks++
-  data.map(item => {
+  await data.map(item => {
     if(item.full === fullURL.full){
       item = fullURL
     }
